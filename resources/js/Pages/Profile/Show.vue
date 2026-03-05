@@ -7,6 +7,8 @@ import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthe
 import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue';
 
+import AdminLayout from '@/Layouts/AdminLayout.vue';
+
 defineProps({
     confirmsTwoFactorAuthentication: Boolean,
     sessions: Array,
@@ -14,7 +16,7 @@ defineProps({
 </script>
 
 <template>
-    <AppLayout title="Profile">
+    <AdminLayout title="Profile">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Profile
@@ -53,5 +55,5 @@ defineProps({
                 </template>
             </div>
         </div>
-    </AppLayout>
+    </AdminLayout>
 </template>
