@@ -24,4 +24,7 @@ Route::middleware([
     Route::get('/products', function () {
         return Inertia::render('Admin/Products');
     })->name('products');
+    Route::get('/setting', function () {
+        return Inertia::render('Admin/Setting');
+    })->name('setting');
 });

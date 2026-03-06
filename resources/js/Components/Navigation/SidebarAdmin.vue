@@ -1,6 +1,17 @@
 <template>
     <main>
-        <div class="hidden sm:flex h-full bg-teal-300 flex-col pt-16 px-4 py-4">
+        <div   :class="[
+    {
+      'bg-blue-300': colorDefault === 'blue',
+      'bg-yellow-300': colorDefault === 'yellow',
+      'bg-red-300': colorDefault === 'red',
+      'bg-pink-300': colorDefault === 'pink',
+      'bg-teal-300': colorDefault === 'teal',
+      'bg-gray-300': colorDefault === 'black',
+    },
+    'hidden sm:flex h-full  flex-col pt-16 px-4 py-4'
+  ]" >
+            
             <nav class="hidden sm:flex sticky top-20 mb-4 z-40 flex-col">
                 <NavLink
                     class="flex items-center mt-4 mb-4 hover:bg-teal-100"
@@ -99,7 +110,9 @@
 import NavLink from "@/Components/NavLink.vue";
 import { usePage } from "@inertiajs/vue3";
 import { useButton } from "@/Composables/Toggle/buttonTogle";
+import { useColor } from "@/Composables/useColor";
 
+const {  themeColor1, themeColor2, themeColor3, themeColor4, themeColor5, themeColor6, colorDefault } = useColor()
 
 const { isVisible, toggleDiv } = useButton();
 const page = usePage();

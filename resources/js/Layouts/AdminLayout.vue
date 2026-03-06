@@ -2,7 +2,7 @@
     <AdminHeader />
     <main class="flex min-h-screen">
         <SidebarAdmin />
-        <div class="w-full">
+        <div class="w-full pt-14">
             <slot />
         </div>
     </main>

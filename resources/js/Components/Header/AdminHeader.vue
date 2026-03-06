@@ -4,7 +4,7 @@
     >
         <nav class="bg-white border-b border-gray-100">
             <!-- Primary Navigation Menu -->
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex">
                         <!-- Logo -->
@@ -12,7 +12,9 @@
                             <Link :href="route('dashboard')">
                                 <ApplicationMark class="block h-9 w-auto" />
                             </Link>
+                             <h1 class="ml-4">LAV Printing Shop</h1>
                         </div>
+                       
                        
                     </div>
 
@@ -208,6 +210,15 @@
                                     <DropdownLink :href="route('profile.show')">
                                         Profile
                                     </DropdownLink>
+                                 
+                                    <DropdownLink :href="route('setting')">
+                                        Setting
+                                    </DropdownLink>
+
+                                    <div class="px-3 mt-2">
+                                        <ButtonColor/>
+                                    </div>
+                                 
 
                                     <DropdownLink
                                         v-if="
@@ -430,6 +441,7 @@ import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
+import ButtonColor from "../ThemeColor/ButtonColor.vue";
 
 
 defineProps({
