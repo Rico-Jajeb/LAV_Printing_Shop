@@ -1,23 +1,18 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
-import AdminLayout from '@/Layouts/AdminLayout.vue';
-import Test from '@/Pages/Test.vue';
+import AdminLayout from "@/Layouts/AdminLayout.vue";
+
+defineOptions({
+    layout: AdminLayout,
+});
 </script>
 
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Dashboard
-            </h2>
-        </template>
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                   <h1>hahaha this is Products</h1>
-                </div>
+    <div class="py-12 mt-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 ">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <h1>hahaha this is Products</h1>
             </div>
         </div>
-    </AdminLayout>
+    </div>
 </template>
