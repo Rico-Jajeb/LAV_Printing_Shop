@@ -32,4 +32,7 @@ Route::middleware([
 });
 
 
+#ADMIN
 Route::get('/products', [ProductController::class, 'index'])->name('products');
+Route::get('/category', [ProductController::class, 'getCategories'])->name('category');
+

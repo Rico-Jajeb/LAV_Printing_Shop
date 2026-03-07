@@ -169,7 +169,7 @@
        
         </NavLink>
         <NavLink
-            :href="route('products')"
+            :href="route('category')"
             class="block px-3 py-2 text-gray-600 hover:bg-teal-100 rounded"
                  prefetch
                     cache-for="30s"
