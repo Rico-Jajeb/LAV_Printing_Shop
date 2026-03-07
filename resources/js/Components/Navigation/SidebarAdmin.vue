@@ -83,7 +83,7 @@
       class="flex items-center w-full px-3 py-2 rounded hover:bg-teal-100 text-gray-600"
       :class="{
         'bg-teal-500 text-white hover:bg-teal-500 hover:text-white':
-          page.component.startsWith('Admin/Products'),
+            isProductsMenuActive
       }"
     >
       <svg
@@ -117,12 +117,17 @@
 
    <!-- Dropdown menu -->
         <div
-        v-if="showProductsMenu "
+        v-if="showProductsMenu || isProductsMenuActive "
         class="ml-6 mt-1 space-y-1 flex flex-col"
         >
         <NavLink
             :href="route('products')"
             class="block px-3 py-2 text-gray-600 hover:bg-teal-100 rounded"
+                :class="{
+        'bg-teal-500 text-white hover:bg-teal-500 hover:text-white':
+         isProductsPage
+
+      }"
                  prefetch
                     cache-for="30s"
         >
@@ -145,10 +150,16 @@
        
         </NavLink>
         <NavLink
-            :href="route('products')"
+            :href="route('addProducts')"
             class="block px-3 py-2 text-gray-600 hover:bg-teal-100 rounded"
+
+            :class="{
+'bg-teal-500 text-white hover:bg-teal-500 hover:text-white':
+        isProductAddPage
+}"
                  prefetch
                     cache-for="30s"
+                    
         >
             <svg
                         class="w-5 h-5 mr-1 text-gray-800 dark:text-white"
@@ -171,6 +182,10 @@
         <NavLink
             :href="route('category')"
             class="block px-3 py-2 text-gray-600 hover:bg-teal-100 rounded"
+                :class="{
+        'bg-teal-500 text-white hover:bg-teal-500 hover:text-white':
+         isCategoryPage
+      }"
                  prefetch
                     cache-for="30s"
         >
@@ -244,21 +259,46 @@ import { useColor } from "@/Composables/useColor";
 
 const page = usePage()
 
-const productsDropdownPages = [
-  'Admin/Products/Products',       // All Products
-  'Admin/Products/AddProduct',     // Add Product
-  'Admin/Products/Categories',     // Categories
-]
+// const productsDropdownPages = [
+//   'Admin/Products/Products',       // All Products
+//   'Admin/Products/AddProduct',     // Add Product
+//   'Admin/category',     // Categories
+// ]
 
-const showProductsMenu = ref(
-  productsDropdownPages.includes(page.component)
+// const showProductsMenu = ref(
+//   productsDropdownPages.includes(page.component)
+// )
+
+const showProductsMenu = ref(false)
+
+const toggleProductsMenu = () => {
+    showProductsMenu.value = !showProductsMenu.value
+}
+
+const isProductsPage = computed(() =>
+    page.component.startsWith("Admin/Products")
+)
+
+const isProductAddPage = computed(() =>
+    page.component.startsWith("Admin/AddProduct")
+)
+
+const isCategoryPage = computed(() =>
+    page.component.startsWith("Admin/category")
 )
 
 
 
-const toggleProductsMenu = () => {
-  showProductsMenu.value = !showProductsMenu.value
-}
+const isProductsMenuActive = computed(() =>
+    isProductsPage.value || isCategoryPage.value
+)
+
+
+
+
+// const toggleProductsMenu = () => {
+//   showProductsMenu.value = !showProductsMenu.value
+// }
 // const toggleProductsMenu = () => {
 //     showProductsMenu.value = !showProductsMenu.value
 // }

@@ -16,4 +16,8 @@ class ProductController extends Controller
     public function getCategories(){
         return Inertia::render('Admin/Products/Categories');
     }
+
+    public function getaddProducts(){
+        return Inertia::render('Admin/Products/AddProduct');
+    }
 }
