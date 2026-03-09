@@ -2,23 +2,26 @@
 
 namespace App\Services\Admin;
 
-
-use App\Models\CategoryProductModel;
+use Illuminate\Support\Facades\Log;
 
 use App\Repositories\Admin\CategoryRepository;
 
 class CategoryService
 {
+    protected $categoryRepository;
 
-    protected $CategoryRepository;
-
-    public function __construct(CategoryRepository $CategoryRepository,)
+    public function __construct(CategoryRepository $categoryRepository)
     {
-        $this->CategoryRepository = $CategoryRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     public function getCategoryProduct()
     {
-        return $this->CategoryRepository->getAll();
+        try {
+            return $this->categoryRepository->getAll();
+        } catch (\Throwable $e) {
+            Log::error('Category fetch failed: ' . $e->getMessage());
+            return collect();
+        }
     }
 }

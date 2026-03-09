@@ -11,3 +11,4 @@ It follows a Controller → Service → Repository → Model architecture to sep
 * Repository → handles database queries for categories.
 
 * Model → represents the Category table in the database (Eloquent ORM).
+

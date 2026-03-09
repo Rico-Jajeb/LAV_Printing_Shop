@@ -108,11 +108,12 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed, watch } from "vue";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import NavLink from "@/Components/NavLink.vue";
 import { Link } from '@inertiajs/vue3'
 import CategoryTable from "@/Pages/Admin/Products/CategoryTable.vue";
+
 
 
 

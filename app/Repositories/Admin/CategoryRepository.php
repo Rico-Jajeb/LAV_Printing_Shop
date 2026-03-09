@@ -11,5 +11,4 @@ class CategoryRepository
     {
         return CategoryProductModel::all();
     }
-
 }

@@ -12,19 +12,18 @@ use App\Services\Admin\CategoryService;
 class CategoryProductController extends Controller
 {
 
-    protected $CategoryService;
+    protected $categoryService;
 
-    public function __construct(CategoryService $CategoryService)
+    public function __construct(CategoryService $categoryService)
     {
-        $this->CategoryService =  $CategoryService;
+        $this->categoryService =  $categoryService;
     }
+
 
     public function index()
     {
-        $category = $this->CategoryService->getCategoryProduct();
-
         return Inertia::render('Admin/Products/Categories', [
-            'category' => $category
+            'category' => Inertia::defer(fn () => $this->categoryService->getCategoryProduct()),
         ]);
     }
 
