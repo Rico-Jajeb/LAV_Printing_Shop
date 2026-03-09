@@ -73,8 +73,8 @@
                 </p>
             </div>
             <div class="sm:flex gap-4 sm:items-center sm:mt-0 mt-4">
-                <Link
-                    href="/add-place-category"
+                <Button
+                    @click="visible = true" 
                     class="flex items-center sm:mb-0 mb-2 px-2 py-1.5 bg-green-300 text-body rounded-base hover:bg-green-500 hover:text-black group"
                 >
                     <svg
@@ -94,7 +94,11 @@
                     </svg>
 
                     <span class="ms-3">Add Category</span>
-                </Link>
+                </Button>
+                <!-- amo ini an kanan Form Category -->
+                <Dialog v-model:visible="visible" modal header="Add Category" :style="{ width: '25rem' }" >
+                    <FormCategory/>
+                </Dialog>
            
             </div>
         </section>
@@ -113,13 +117,18 @@ import AdminLayout from "@/Layouts/AdminLayout.vue";
 import NavLink from "@/Components/NavLink.vue";
 import { Link } from '@inertiajs/vue3'
 import CategoryTable from "@/Pages/Admin/Products/CategoryTable.vue";
-
+import Dialog from 'primevue/dialog';
+import { Button } from "primevue";
+import FormCategory from "./FormCategory.vue";
 
 
 
 const props = defineProps({
     category: Array
 });
+
+
+const visible = ref(false);
 
 defineOptions({
     layout: AdminLayout,
