@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\CategoryProductController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -34,7 +35,9 @@ Route::middleware([
 
 #ADMIN
 Route::get('/products', [ProductController::class, 'index'])->name('products');
-Route::get('/category', [ProductController::class, 'getCategories'])->name('category');
+// Route::get('/category', [ProductController::class, 'getCategories'])->name('category');
 Route::get('/addProducts', [ProductController::class, 'getaddProducts'])->name('addProducts');
+
+Route::get('/category', [CategoryProductController::class, 'index'])->name('category');
 
 

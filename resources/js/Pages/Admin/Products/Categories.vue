@@ -99,6 +99,9 @@
             </div>
         </section>
 
+        <section class="mt-4">
+            <CategoryTable  :customers="customers"  />
+        </section>
 
 
     </main>
@@ -109,6 +112,13 @@ import { ref } from "vue";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import NavLink from "@/Components/NavLink.vue";
 import { Link } from '@inertiajs/vue3'
+import CategoryTable from "@/Pages/Admin/Products/CategoryTable.vue";
+
+
+
+const props = defineProps({
+    customers: Array
+});
 
 defineOptions({
     layout: AdminLayout,
