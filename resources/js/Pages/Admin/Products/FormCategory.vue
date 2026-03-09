@@ -1,6 +1,6 @@
 <template>
   <main class="">
-        <Form @submit.prevent="submit">
+        <Form @submit.prevent="submit"  enctype="multipart/form-data">
             <div class="mb-4">
                 <label
                     for="name"
@@ -38,6 +38,14 @@
                 </div>
             </div>
 
+
+                <div class="mb-4">
+                    <label for="image" class="block mb-2 text-sm font-medium">Category Image</label>
+                    <input type="file" id="image" @change="handleFileUpload" />
+                </div>
+
+
+
             <ToggleSwitch class="!hidden" v-model="form.status" />
             <Button type="submit" >Submit</Button>
         </Form>    
@@ -56,10 +64,24 @@ const form = useForm({
   name: '',
   description: '',
   status: true,
+  image: null,
 });
 
-const submit = () => {
-  form.post('/post.category');
+
+const handleFileUpload = (e) => {
+  form.image = e.target.files[0];
 };
+
+
+const submit = () => {
+  // Must use multipart/form-data
+  form.post('/post.category', {
+    forceFormData: true, // this makes Inertia use FormData automatically
+  });
+};
+
+// const submit = () => {
+//   form.post('/post.category');
+// };
 
 </script>

@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
+use Illuminate\Support\Facades\Storage;
+
 #Services
 use App\Services\Admin\CategoryService;
 
+#Request
 use App\Http\Requests\Admin\CategoryRequest;
 
 class CategoryProductController extends Controller
@@ -43,6 +46,20 @@ class CategoryProductController extends Controller
     public function store(CategoryRequest $request)
     {
         $validated = $request->validated();
+
+            // Check if image is present
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+
+            // Upload to Cloudflare R2
+            $path = Storage::disk('r2')->putFile('categories', $image);
+
+            // Save the full path or URL in validated data
+            $validated['image'] = $path;
+        }
+
+
+
         $this->categoryService->createCategory($validated);
         return redirect()->route('category')->with('success', "Category Added Successfully!");
     }

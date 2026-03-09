@@ -14,6 +14,7 @@ class CategoryProductModel extends Model
         'id',
         'name',
         'description',
-        'status'
+        'status',
+        'image',
     ];
 }
