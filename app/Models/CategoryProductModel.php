@@ -11,7 +11,9 @@ class CategoryProductModel extends Model
     protected $table = 'product_category';
 
     protected $fillable = [
+        'id',
         'name',
-        'description'
+        'description',
+        'status'
     ];
 }

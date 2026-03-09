@@ -100,7 +100,7 @@
         </section>
 
         <section class="mt-4">
-            <CategoryTable  :customers="customers"  />
+            <CategoryTable  :category="category"  />
         </section>
 
 
@@ -117,7 +117,7 @@ import CategoryTable from "@/Pages/Admin/Products/CategoryTable.vue";
 
 
 const props = defineProps({
-    customers: Array
+    category: Array
 });
 
 defineOptions({

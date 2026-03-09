@@ -1,7 +1,7 @@
 <template>
     <main class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-8 ">
         <div class="card">
-                <DataTable v-model:filters="filters" v-model:selection="selectedCustomer" :value="customers"
+                <DataTable v-model:filters="filters" v-model:selection="selectedCategory" :value="category"
                         stateStorage="session" stateKey="dt-state-demo-session" paginator :rows="5" filterDisplay="menu"
                         selectionMode="single" dataKey="id" :globalFilterFields="['name','description','status']" tableStyle="min-width: 50rem">
                     <template #header>
@@ -17,9 +17,14 @@
                             <InputText v-model="filterModel.value" type="text" placeholder="Search by name" />
                         </template>
                     </Column>
-                    <Column field="description" header="description" sortable style="width: 25%">
+          
+                    <Column field="description" header="Description" sortable style="width: 25%">
                         <template #filter="{ filterModel }">
-                            <InputText v-model="filterModel.value" type="text" placeholder="Search by description" />
+                            <InputText
+                                v-model="filterModel.value"
+                                type="text"
+                                placeholder="Search description"
+                            />
                         </template>
                     </Column>
             
@@ -52,40 +57,29 @@ import InputIcon from 'primevue/inputicon'
 import InputText from 'primevue/inputtext'
 import ColumnGroup from 'primevue/columngroup';   // optional
 import Row from 'primevue/row';                   // optional
+import Select from 'primevue/select';
+import Tag from 'primevue/tag'
 
 const props = defineProps({
-    customers: Array
+    category: Array
 })
 
 
-const selectedCustomer = ref();
-const filters = ref(
-    {
-        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-        name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-        description: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-        status: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] }
-    }
-);
+const selectedCategory = ref();
+
+const filters = ref({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+
+    name: { value: null, matchMode: FilterMatchMode.CONTAINS },
+
+    description: { value: null, matchMode: FilterMatchMode.CONTAINS },
+
+    status: { value: null, matchMode: FilterMatchMode.EQUALS }
+})
 
 
 const getSeverity = (status) => {
-    switch (status) {
-        case 'unqualified':
-            return 'danger';
-
-        case 'qualified':
-            return 'success';
-
-        case 'new':
-            return 'info';
-
-        case 'negotiation':
-            return 'warn';
-
-        case 'renewal':
-            return null;
-    }
-};
+    return status ? 'success' : 'danger'
+}
 
 </script>

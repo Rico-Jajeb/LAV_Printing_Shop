@@ -6,42 +6,26 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
+#Services
+use App\Services\Admin\CategoryService;
+
 class CategoryProductController extends Controller
 {
-    public function index(){
-            $customers = [
-        [
-            'id' => 1,
-            'name' => 'John Doe',
-            'description' => 'Desc1',
-            'country' => [
-                'name' => 'United States',
-                'code' => 'us'
-            ],
-            'representative' => [
-                'name' => 'Amy Elsner',
-                'image' => 'amyelsner.png'
-            ],
-            'status' => 'qualified'
-        ],
-        [
-            'id' => 2,
-            'name' => 'Maria Garcia',
-            'description' => 'Desc2',
-            'country' => [
-                'name' => 'Spain',
-                'code' => 'es'
-            ],
-            'representative' => [
-                'name' => 'Anna Fali',
-                'image' => 'annafali.png'
-            ],
-            'status' => 'new'
-        ]
-    ];
+
+    protected $CategoryService;
+
+    public function __construct(CategoryService $CategoryService)
+    {
+        $this->CategoryService =  $CategoryService;
+    }
+
+    public function index()
+    {
+        $category = $this->CategoryService->getCategoryProduct();
 
         return Inertia::render('Admin/Products/Categories', [
-            'customers' => $customers
-            ]);
+            'category' => $category
+        ]);
     }
+
 }
