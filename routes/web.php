@@ -39,5 +39,6 @@ Route::get('/products', [ProductController::class, 'index'])->name('products');
 Route::get('/addProducts', [ProductController::class, 'getaddProducts'])->name('addProducts');
 
 Route::get('/category', [CategoryProductController::class, 'index'])->name('category');
+Route::post('/post.category', [CategoryProductController::class, 'store'])->name('post.category');
 
 

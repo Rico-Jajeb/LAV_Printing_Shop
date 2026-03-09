@@ -15,6 +15,11 @@ class CategoryService
         $this->categoryRepository = $categoryRepository;
     }
 
+    /**
+     * Get Data from DB and do try catch 
+     *
+     * @return void
+     */
     public function getCategoryProduct()
     {
         try {
@@ -23,5 +28,16 @@ class CategoryService
             Log::error('Category fetch failed: ' . $e->getMessage());
             return collect();
         }
+    }
+
+    /**
+     *  Create a new category using the repository.
+     *
+     * @param array $data
+     * @return void
+     */
+    public function createCategory(array $data)
+    {
+        return $this->categoryRepository->create($data);
     }
 }

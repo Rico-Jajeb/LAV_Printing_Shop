@@ -1,6 +1,6 @@
 <template>
   <main class="">
-        <Form action="/users" method="post">
+        <Form @submit.prevent="submit">
             <div class="mb-4">
                 <label
                     for="name"
@@ -9,6 +9,7 @@
                 >
                 <div class="flex items-center">
                     <InputText
+                        v-model="form.name"
                         name="name"
                         type="text"
                         id="name"
@@ -26,6 +27,7 @@
                 >
                 <div class="flex items-center">
                     <InputText
+                        v-model="form.description"
                         name="description"
                         type="text"
                         id="description"
@@ -36,7 +38,7 @@
                 </div>
             </div>
 
-
+            <ToggleSwitch class="!hidden" v-model="form.status" />
             <Button type="submit" >Submit</Button>
         </Form>    
   </main>
@@ -44,8 +46,20 @@
 </template>
 <script setup>
 import { InputText } from "primevue";
-import { Form } from "@inertiajs/vue3";
-
+import { useForm  } from "@inertiajs/vue3";
 import { Button } from "primevue";
+import { Form } from "@inertiajs/vue3";
+import ToggleSwitch from 'primevue/toggleswitch';
+
+
+const form = useForm({
+  name: '',
+  description: '',
+  status: true,
+});
+
+const submit = () => {
+  form.post('/post.category');
+};
 
 </script>
