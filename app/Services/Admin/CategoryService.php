@@ -21,7 +21,8 @@ class CategoryService
     }
 
     /**
-     * Get Data from DB and do try catch 
+     * Get Category Product Data from DB 
+     * add Try Catch incase db failed
      *
      * @return void
      */

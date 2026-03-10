@@ -12,7 +12,7 @@
                 filterDisplay="menu"
                 selectionMode="single"
                 dataKey="id"
-                :globalFilterFields="['name', 'description', 'status']"
+                :globalFilterFields="['name', 'description', 'status', 'image']"
                 tableStyle="min-width: 50rem"
             >
                 <template #header>
@@ -48,6 +48,23 @@
                             type="text"
                             placeholder="Search description"
                         />
+                    </template>
+                </Column>
+                    <Column
+                    field="image"
+                    header="Image"
+                    style="width: 25%"
+                >
+                    <template #body="{ data }">
+                        <Image 
+                            v-if="data.image_url" 
+                            :src="data.image_url" 
+                            :alt="data.name"
+                            width="50"
+                           style="height: 50px;object-fit: cover; border-radius: 4px; "
+                          preview 
+                        />
+                        <span v-else>No image</span>
                     </template>
                 </Column>
 
@@ -115,6 +132,7 @@ import Row from "primevue/row"; // optional
 import Select from "primevue/select";
 import Tag from "primevue/tag";
 import ProgressSpinner from "primevue/progressspinner";
+import Image from 'primevue/image';
 
 const props = defineProps({
     category: Array,
@@ -128,6 +146,8 @@ const filters = ref({
     name: { value: null, matchMode: FilterMatchMode.CONTAINS },
 
     description: { value: null, matchMode: FilterMatchMode.CONTAINS },
+
+    image: { value: null, matchMode: FilterMatchMode.CONTAINS },
 
     status: { value: null, matchMode: FilterMatchMode.EQUALS },
 });
