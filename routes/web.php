@@ -35,10 +35,9 @@ Route::middleware([
 
 #ADMIN
 Route::get('/products', [ProductController::class, 'index'])->name('products');
-// Route::get('/category', [ProductController::class, 'getCategories'])->name('category');
 Route::get('/addProducts', [ProductController::class, 'getaddProducts'])->name('addProducts');
 
 Route::get('/category', [CategoryProductController::class, 'index'])->name('category');
-Route::post('/post.category', [CategoryProductController::class, 'store'])->name('post.category');
+Route::post('/category/create', [CategoryProductController::class, 'store'])->name('category.create');
 
 

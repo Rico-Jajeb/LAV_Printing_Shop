@@ -6,8 +6,12 @@
             <slot />
         </div>
     </main>
+    <!-- kanan Notif -->
+    <Toast />
 </template>
 <script setup>
 import AdminHeader from "@/Components/Header/AdminHeader.vue";
 import SidebarAdmin from "@/Components/Navigation/SidebarAdmin.vue";
+import Toast from 'primevue/toast'
+
 </script>

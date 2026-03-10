@@ -96,7 +96,7 @@
                     <span class="ms-3">Add Category</span>
                 </Button>
                 <!-- amo ini an kanan Form Category -->
-                <Dialog v-model:visible="visible" modal header="Add Category" :style="{ width: '25rem' }" >
+                <Dialog v-model:visible="visible"  header="Add Category" :style="{ width: '25rem' }" >
                     <FormCategory/>
                 </Dialog>
            

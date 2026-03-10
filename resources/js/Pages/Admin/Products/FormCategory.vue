@@ -61,6 +61,9 @@ import { Button } from "primevue";
 import { Form } from "@inertiajs/vue3";
 import ToggleSwitch from 'primevue/toggleswitch';
 
+import { useToast } from 'primevue/usetoast'
+const toast = useToast()
+
 
 const form = useForm({
   name: '',
@@ -75,15 +78,29 @@ const handleFileUpload = (e) => {
 };
 
 
-const submit = () => {
-  // Must use multipart/form-data
-  form.post('/post.category', {
+const submit = () => {  
+  form.post('/category/create', {
     forceFormData: true, 
+
+    onSuccess: () => {
+      toast.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: 'Category Added Successfully!',
+        life: 20000
+      })
+    },
+    onError: () => {
+      toast.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Failed to create category. Please check the form.',
+        life: 20000
+      })
+    }
+
+
   });
 };
-
-// const submit = () => {
-//   form.post('/post.category');
-// };
 
 </script>
