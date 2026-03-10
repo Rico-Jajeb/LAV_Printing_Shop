@@ -7,21 +7,34 @@ use Intervention\Image\Laravel\Facades\Image;
 
 class ImageService
 {
-    public function processAndUpload($uploadedFile, $width = 600, $quality = 80)
+    /**
+     * Re-usable Image Service
+     * Resize Image, Adjust Quality, Change into webp
+     * Store Image in Cloudflare R2
+     *
+     * @param [type] $uploadedFile
+     * @param [type] $folder
+     * @param integer $width
+     * @param integer $quality
+     * @return void
+     */
+    public function processAndUpload($uploadedFile, $folder, $width = 600, $quality = 80)
     {
-        $image = Image::read($uploadedFile); 
+        $image = Image::read($uploadedFile);
 
         $encoded = $image
-            ->scaleDown(width: $width)      
-            ->toWebp(quality: $quality);     
+            ->scaleDown(width: $width)
+            ->toWebp(quality: $quality);
 
-        $filename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME)
-            . '-' . time() . '.webp';
+        $filename = pathinfo(
+            $uploadedFile->getClientOriginalName(),
+            PATHINFO_FILENAME
+        ) . '-' . time() . '.webp';
 
-        $path = 'categories/' . $filename;
+        $path = $folder . '/' . $filename;
 
         Storage::disk('r2')->put($path, $encoded);
 
-        return $filename;
+        return $path; 
     }
 }

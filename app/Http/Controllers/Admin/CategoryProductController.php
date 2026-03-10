@@ -48,22 +48,9 @@ class CategoryProductController extends Controller
      */
     public function store(CategoryRequest $request)
     {
-        $validated = $request->validated();
-
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-
-            // Process and upload via ImageService
-            $filename = $this->imageService->processAndUpload($image, 600, 80);
-            
-            // Save the R2 path in validated data
-            $validated['image'] = 'categories/' . $filename;
-        }
-
-        $this->categoryService->createCategory($validated);
-
+        $this->categoryService->createCategory($request->validated(), $request->file('image'));
         return redirect()->route('category')->with('success', "Category Added Successfully!");
     }
-
+ 
 
 }
