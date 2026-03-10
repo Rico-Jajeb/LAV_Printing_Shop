@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 #Services
 use App\Services\Admin\CategoryService;
+use App\Services\ImageService;
 
 #Request
 use App\Http\Requests\Admin\CategoryRequest;
@@ -18,10 +19,12 @@ class CategoryProductController extends Controller
 {
 
     protected $categoryService;
+    protected $imageService;
 
-    public function __construct(CategoryService $categoryService)
+    public function __construct(CategoryService $categoryService, ImageService $imageService)
     {
         $this->categoryService =  $categoryService;
+        $this->imageService =  $imageService;
     }
 
     /**
@@ -47,20 +50,20 @@ class CategoryProductController extends Controller
     {
         $validated = $request->validated();
 
-            // Check if image is present
         if ($request->hasFile('image')) {
             $image = $request->file('image');
 
-            // Upload to Cloudflare R2
-            $path = Storage::disk('r2')->putFile('categories', $image);
-
-            // Save the full path or URL in validated data
-            $validated['image'] = $path;
+            // Process and upload via ImageService
+            $filename = $this->imageService->processAndUpload($image, 600, 80);
+            
+            // Save the R2 path in validated data
+            $validated['image'] = 'categories/' . $filename;
         }
 
-
-
         $this->categoryService->createCategory($validated);
+
         return redirect()->route('category')->with('success', "Category Added Successfully!");
     }
+
+
 }

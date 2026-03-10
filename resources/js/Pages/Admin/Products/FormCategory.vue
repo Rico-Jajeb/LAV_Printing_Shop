@@ -17,6 +17,7 @@
                         placeholder="Category name"
                         required
                     />
+                    <span v-if="form.errors.name">{{ form.errors.name }}</span>
                 </div>
             </div>
             <div class="mb-4">
@@ -35,6 +36,7 @@
                         placeholder="Description.."
                         required
                     />
+                    <span v-if="form.errors.description">{{ form.errors.description }}</span>
                 </div>
             </div>
 
@@ -76,7 +78,7 @@ const handleFileUpload = (e) => {
 const submit = () => {
   // Must use multipart/form-data
   form.post('/post.category', {
-    forceFormData: true, // this makes Inertia use FormData automatically
+    forceFormData: true, 
   });
 };
 
