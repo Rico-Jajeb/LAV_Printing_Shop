@@ -28,4 +28,41 @@ class CategoryRepository
     {
         return CategoryProductModel::create($data);
     }
-}
+
+
+   
+    public function findById(int $id)
+    {
+        return CategoryProductModel::find($id);
+    }
+
+
+    /**
+     * Update the category
+     * it find the ID then send it to DB
+     *
+     * @param integer $id
+     * @param array $data
+     * @return void
+     */
+    public function update(int $id, array $data)
+    {
+        $category = $this->findById($id);
+
+        return $category->update($data);
+    }
+
+
+
+    /**
+     * Delete the category 
+     *
+     * @param CategoryProductModel $category
+     * @return boolean
+     */
+    public function delete(CategoryProductModel $category): bool
+    {
+        return $category->delete();
+    }
+
+}   

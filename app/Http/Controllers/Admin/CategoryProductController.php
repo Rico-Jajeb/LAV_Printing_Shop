@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 #Services
 use App\Services\Admin\CategoryService;
 use App\Services\ImageService;
@@ -51,6 +52,37 @@ class CategoryProductController extends Controller
         $this->categoryService->createCategory($request->validated(), $request->file('image'));
         return redirect()->route('category')->with('success', "Category Added Successfully!");
     }
- 
+
+
+
+    /**
+     * Handle the Category Update
+     * Validate the incoming request via CategoryRequest.
+     * Pass the validated data and optional image file to the CategoryService for updating.
+     * After a successful update, redirect back to the category index with a success message.
+     * 
+     * @param [type] $id
+     * @param CategoryRequest $request
+     * @return void
+     */
+    public function update($id, CategoryRequest  $request){
+        $this->categoryService->updateCategory($id, $request->validated(), $request->file('image'));
+        return redirect()->route('category')->with('success', "Category Added Successfully!");
+    }
+
+
+
+    /**
+     * Delete Category Product by id
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function destroy($id)
+    {
+        $this->categoryService->deleteCategory($id);
+        return redirect()->back()->with('success', 'Category deleted successfully!');
+    }
+
 
 }

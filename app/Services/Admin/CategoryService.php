@@ -3,6 +3,10 @@
 namespace App\Services\Admin;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Laravel\Facades\Image;
+
 
 use App\Repositories\Admin\CategoryRepository;
 
@@ -60,4 +64,65 @@ class CategoryService
         return $this->categoryRepository->create($data);
     }
 
+    /**
+     * Update The category by id
+     * Check if the id from user page is in DB
+     * then check if the update is also updating the image
+     * if yes, then it check if the image exist in cloudflare 
+     * if it exist then it delete the image in cloudflare
+     * then upload the latest image, 
+     * If no new image in update keep the existing image
+     * then send the data into repository DB
+     * 
+     * @param integer $id
+     * @param array $data
+     * @param [type] $image
+     * @return void
+     */
+    public function updateCategory(int $id, array $data, $image = null)
+    {
+        $category = $this->categoryRepository->findById($id);
+
+        if (!$category) {
+            throw new \Exception("Category not found");
+        }
+
+        if ($image) {
+            if ($category->image && Storage::disk('r2')->exists($category->image)) {
+                Storage::disk('r2')->delete($category->image);
+            }
+
+            $data['image'] = $this->imageService->processAndUpload(
+                $image,
+                'categories',
+                600,
+                80
+            );
+        } else {
+            unset($data['image']);
+        }
+
+        return $this->categoryRepository->update($id, $data);
+    }
+
+
+    /**
+     * Find the category by id
+     * Then check if the category Image exist 
+     * in cloudflare r2, if so then delete it
+     * then delete the category data in DB
+     *  
+     * @param integer $id
+     * @return boolean
+     */
+    public function deleteCategory(int $id): bool
+    {
+        $category = $this->categoryRepository->findById($id);
+
+        if ($category->image && Storage::disk('r2')->exists($category->image)) {
+            Storage::disk('r2')->delete($category->image);
+        }
+
+        return $this->categoryRepository->delete($category);
+    }
 }

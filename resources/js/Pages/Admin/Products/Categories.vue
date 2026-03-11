@@ -74,7 +74,8 @@
             </div>
             <div class="sm:flex gap-4 sm:items-center sm:mt-0 mt-4">
                 <Button
-                    @click="visible = true" 
+                  @click="openCreate"
+                    
                     class="flex items-center sm:mb-0 mb-2 px-2 py-1.5 bg-green-300 text-body rounded-base hover:bg-green-500 hover:text-black group"
                 >
                     <svg
@@ -96,15 +97,19 @@
                     <span class="ms-3">Add Category</span>
                 </Button>
                 <!-- amo ini an kanan Form Category -->
-                <Dialog v-model:visible="visible"  header="Add Category" :style="{ width: '25rem' }" >
-                    <FormCategory/>
+                <Dialog v-model:visible="visible"  :header="selectedCategory ? 'Edit Category' : 'Add Category'" :style="{ width: '25rem' }" >
+                    <FormCategory :category="selectedCategory" :key="selectedCategory?.id || 'new'" />
                 </Dialog>
            
             </div>
         </section>
 
         <section class="mt-4">
-            <CategoryTable  :category="category"  />
+            <!-- <CategoryTable  :category="category"  /> -->
+                <CategoryTable 
+                    :category="category"
+                    @edit="editCategory"
+                />
         </section>
 
 
@@ -126,6 +131,18 @@ import FormCategory from "./FormCategory.vue";
 const props = defineProps({
     category: Array
 });
+
+const selectedCategory = ref(null)
+
+const openCreate = () => {
+  selectedCategory.value = null
+  visible.value = true
+}
+
+const editCategory = (category) => {
+  selectedCategory.value = category
+  visible.value = true
+}
 
 
 const visible = ref(false);
