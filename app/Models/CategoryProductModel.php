@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Support\Facades\Storage;
 
+use App\Models\ProductModel;
+
 class CategoryProductModel extends Model
 {
     use HasFactory;
@@ -38,4 +40,16 @@ class CategoryProductModel extends Model
 
         return env('R2_URL') . '/' . $this->image;
     }
+
+
+    /**
+     * Connect the category to product 
+     *
+     * @return void
+     */
+    public function products()
+    {
+        return $this->hasMany(ProductModel::class, 'product_category_id');
+    }
+
 }
