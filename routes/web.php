@@ -37,10 +37,9 @@ Route::middleware([
 Route::get('/products', [ProductController::class, 'index'])->name('products');
 Route::get('/addProducts', [ProductController::class, 'getaddProducts'])->name('addProducts');
 
+
 Route::get('/category', [CategoryProductController::class, 'index'])->name('category');
 Route::post('/category/create', [CategoryProductController::class, 'store'])->name('category.create');
-
-
 Route::put('/category/update/{id}', [CategoryProductController::class, 'update'])->name('category.update');
 Route::patch('/category/{id}/status', [CategoryProductController::class, 'statusUpdate'])->name('category.updateStatus');
 Route::delete('/category/{id}', [CategoryProductController::class, 'destroy'])->name('category.destroy');
