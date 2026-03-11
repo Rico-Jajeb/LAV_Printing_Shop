@@ -9,27 +9,37 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+
+#Repository
+use App\Repositories\Admin\CategoryRepository;
+
 #Services
 use App\Services\Admin\CategoryService;
 use App\Services\ImageService;
 
 #Request
 use App\Http\Requests\Admin\CategoryRequest;
+use App\Http\Requests\Admin\CategoryStatusRequest;
 
 class CategoryProductController extends Controller
 {
 
     protected $categoryService;
     protected $imageService;
+    protected $categoryRepository;
 
-    public function __construct(CategoryService $categoryService, ImageService $imageService)
+    public function __construct(CategoryService $categoryService, ImageService $imageService, CategoryRepository $categoryRepository)
     {
         $this->categoryService =  $categoryService;
         $this->imageService =  $imageService;
+        $this->categoryRepository =  $categoryRepository;
     }
 
     /**
-     * Display Category Page with defer
+     * Display Category Page 
+     * using the defer built in inertia
+     * it load the category page first, then follow 
+     * the categoryData
      *
      * @return void
      */
@@ -70,6 +80,23 @@ class CategoryProductController extends Controller
         return redirect()->route('category')->with('success', "Category Added Successfully!");
     }
 
+
+
+    /**
+     * Handle the Category Status
+     * validate the incoming request
+     * pass the validated status to categoryService
+     * after a successful update status, redirect back to the category
+     * 
+     * @param integer $id
+     * @param CategoryStatusRequest $request
+     * @return void
+     */
+    public function statusUpdate(int $id, CategoryStatusRequest $request)
+    {
+        $this->categoryService->updateStatus($id, $request->validated(),);
+        return redirect()->route('category')->with('success', "Category status updated Successfully!");
+    }
 
 
     /**

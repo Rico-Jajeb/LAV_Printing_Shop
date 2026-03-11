@@ -12,3 +12,6 @@ It follows a Controller → Service → Repository → Model architecture to sep
 
 * Model → represents the Category table in the database (Eloquent ORM).
 
+
+
+Image upload - use cloudflare R2 for the image storage,

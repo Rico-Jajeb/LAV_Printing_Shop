@@ -106,6 +106,30 @@ class CategoryService
     }
 
 
+
+    /**
+     * Update the category status selected
+     * check the id is in db
+     * if the id is not in db then it throw the error category not found
+     * but if it exist then now update the status
+     *
+     * @param integer $id
+     * @param array $data
+     * @return void
+     */
+    public function updateStatus(int $id, array $data)
+    {
+        $category = $this->categoryRepository->findById($id);
+
+        if (!$category) {
+             throw new \Exception("Category not found");
+        }
+
+        return $this->categoryRepository->update($id, $data);
+    }
+
+
+
     /**
      * Find the category by id
      * Then check if the category Image exist 

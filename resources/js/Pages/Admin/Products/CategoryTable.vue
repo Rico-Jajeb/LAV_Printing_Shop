@@ -76,10 +76,14 @@
                     style="width: 25%"
                 >
                     <template #body="{ data }">
-                        <Tag
+                        <!-- <Tag
                             :value="data.status"
                             :severity="getSeverity(data.status)"
-                        />
+                        /> -->
+                           <ToggleSwitch
+                                :modelValue="data.status"
+                                @change="updateStatus(data)"
+                            />
                     </template>
                     <template #filter="{ filterModel }">
                         <Select
@@ -198,6 +202,8 @@ import { router } from "@inertiajs/vue3";
 import { useToast } from "primevue/usetoast";
 import { useConfirm } from "primevue/useconfirm";
 
+import ToggleSwitch from 'primevue/toggleswitch';
+
 const confirm = useConfirm();
 const toast = useToast();
 
@@ -231,6 +237,37 @@ const filters = ref({
 const getSeverity = (status) => {
     return status ? "success" : "danger";
 };
+
+
+const updateStatus = (data) => {
+    data.status = !data.status  // 👇 Optimistically toggle UI immediately
+
+    router.patch(`/category/${data.id}/status`, 
+        { status: data.status },
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                toast.add({
+                    severity: 'success',
+                    summary: 'Updated',
+                    detail: `Category ${data.status ? 'activated' : 'deactivated'} successfully!`,
+                    life: 3000
+                })
+            },
+            onError: () => {
+                // 👇 Revert toggle if request fails
+                data.status = !data.status
+                toast.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'Failed to update status!',
+                    life: 3000
+                })
+            }
+        }
+    )
+}
+
 
 const confirmDelete = (id) => {
     confirm.require({

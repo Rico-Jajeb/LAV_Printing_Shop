@@ -42,5 +42,5 @@ Route::post('/category/create', [CategoryProductController::class, 'store'])->na
 
 
 Route::put('/category/update/{id}', [CategoryProductController::class, 'update'])->name('category.update');
-
+Route::patch('/category/{id}/status', [CategoryProductController::class, 'statusUpdate'])->name('category.updateStatus');
 Route::delete('/category/{id}', [CategoryProductController::class, 'destroy'])->name('category.destroy');
