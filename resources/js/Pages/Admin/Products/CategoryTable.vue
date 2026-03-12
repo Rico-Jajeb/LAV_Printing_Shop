@@ -70,8 +70,13 @@
 
                 <Column field="name" header="Name" sortable style="width: 25%">
                     <template #body="{ data }">
-                        <Skeleton v-if="isLoading" width="80%" height="1rem" />
-
+                           <ProgressSpinner
+                            v-if="isLoading"
+                            style="width: 15px; height: 15px"
+                            strokeWidth="8"
+                            fill="transparent"
+                            animationDuration=".5s"
+                        />
                         <span v-else>{{ data.name }}</span>
                     </template>
                     <template #filter="{ filterModel }">
@@ -439,9 +444,11 @@ const props = defineProps({
     category: Array,
 });
 
+// kanan Skeleten ini para han table
 const isLoading = computed(() => !props.category);
-
 const skeletonRows = Array.from({ length: 5 }, (_, i) => ({ id: i }));
+
+
 
 const emit = defineEmits(["edit"]);
 
