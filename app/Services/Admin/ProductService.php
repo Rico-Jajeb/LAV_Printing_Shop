@@ -55,5 +55,20 @@ class ProductService
 
     }
 
+
+    public function deleteProduct(int $id): bool
+    {
+       
+        // Delete all product images in this category from R2
+        $products = $this->productRepository->findById($id);
+    
+        // Delete the category image from R2
+        if ($products->image && Storage::disk('r2')->exists($products->image)) {
+            Storage::disk('r2')->delete($products->image);
+        }
+
+        return $this->productRepository->delete($products);
+    }
+
     
 }

@@ -118,7 +118,7 @@
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"/>
                                 </svg>
                             </button>
-                            <button @click="confirmDelete(data.id)" class="cursor-pointer text-red-600">
+                            <button @click="confirmDelete(data)" class="cursor-pointer text-red-600">
                                 <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
                                 </svg>
@@ -392,17 +392,16 @@ const updateStatus = (data) => {
     );
 };
 
-const confirmDelete = (id) => {
+const confirmDelete = (data) => {
     confirm.require({
-        message: "Do you want to delete this record?",
+        message: `Are you sure you want to delete '${data.name}'?`,
         header: "Danger Zone",
         icon: "pi pi-info-circle",
         rejectProps: { label: "Cancel", severity: "secondary", outlined: true },
         acceptProps: { label: "Delete", severity: "danger" },
         accept: () => {
-            // FIX: Route corrected from /category/ to /product/
-            router.delete(`/category/${id}`, {
-                onSuccess: () => toast.add({ severity: "success", summary: "Deleted", detail: "Product deleted successfully!", life: 3000 }),
+            router.delete(`/products/${data.id}`, {
+                onSuccess: () => toast.add({ severity: "success", summary: "Deleted", detail: `"${data.name}" deleted successfully!`, life: 3000 }),
                 onError: () => toast.add({ severity: "error", summary: "Error", detail: "Failed to delete product!", life: 3000 }),
             });
         },

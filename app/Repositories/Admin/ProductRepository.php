@@ -37,4 +37,17 @@ class ProductRepository
         return ProductModel::where('product_category_id', $categoryId)->get();
     }
 
+
+    
+    /**
+     * Delete the category 
+     *
+     * @param ProductModel $category
+     * @return boolean
+     */
+    public function delete(ProductModel $products): bool
+    {
+        return $products->delete();
+    }
+
 }   

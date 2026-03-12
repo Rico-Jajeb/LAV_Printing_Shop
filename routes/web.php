@@ -37,6 +37,7 @@ Route::middleware([
 Route::get('/products', [ProductController::class, 'index'])->name('products');
 Route::get('/addProducts', [ProductController::class, 'productsAdd'])->name('addProducts');
 Route::post('/products/create', [ProductController::class, 'store'])->name('products.store');
+Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
 
 
 Route::get('/category', [CategoryProductController::class, 'index'])->name('category');

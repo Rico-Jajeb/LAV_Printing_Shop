@@ -62,6 +62,17 @@ class ProductController extends Controller
 
 
 
+    /**
+     * Delete Category Product by id
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function destroy($id)
+    {
+        $this->productService->deleteProduct($id);
+        return redirect()->back()->with('success', 'Category deleted successfully!');
+    }
 
 
 
