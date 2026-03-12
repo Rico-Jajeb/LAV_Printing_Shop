@@ -67,14 +67,17 @@
         <!-- amo ini an kanan header -->
         <section class="mt-4 sm:flex sm:justify-between">
             <div>
-                <h1 class="mb-2 font-bold text-3xl">Products</h1>
+                <h1 class="mb-2 font-bold text-3xl">Product</h1>
                 <p class="text-body">
                     Manage your product inventory and listings.
                 </p>
             </div>
             <div class="sm:flex gap-4 sm:items-center sm:mt-0 mt-4">
-                <Link
-                    href="/add-place-category"
+                <NavLink 
+                  :href="route('addProducts')"
+                    
+                   prefetch
+                    cache-for="30s"
                     class="flex items-center sm:mb-0 mb-2 px-2 py-1.5 bg-green-300 text-body rounded-base hover:bg-green-500 hover:text-black group"
                 >
                     <svg
@@ -93,40 +96,57 @@
                         />
                     </svg>
 
-                    <span class="ms-3">Add Category</span>
-                </Link>
-                <Link 
-                    href="/add-place"
-                    class="flex items-center bg-green-300 px-2 py-1.5 text-body rounded-base hover:bg-green-500 hover:text-black group"
-                    ><svg
-                        class="w-6 h-6 text-gray-800 dark:text-white"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4.243a1 1 0 1 0-2 0V11H7.757a1 1 0 1 0 0 2H11v3.243a1 1 0 1 0 2 0V13h3.243a1 1 0 1 0 0-2H13V7.757Z"
-                            clip-rule="evenodd"
-                        />
-                    </svg>
-
-                    <span class="ms-3">Add Place</span>
-                </Link>
+                    <span class="ms-3">Add Product</span>
+                </NavLink>
+                <!-- amo ini an kanan Form Category -->
+                <Dialog v-model:visible="visible"  :header="selectedCategory ? 'Edit Category' : 'Add Category'" :style="{ width: '25rem' }" >
+                    <FormAddProduct :category="selectedCategory" :key="selectedCategory?.id || 'new'" />
+                </Dialog>
+           
             </div>
         </section>
+
+        <section class="mt-4">
+                <ProductTable :product="product"
+                    @edit="editProduct" />
+        </section>
+
 
     </main>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed, watch } from "vue";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import NavLink from "@/Components/NavLink.vue";
 import { Link } from '@inertiajs/vue3'
+import Dialog from 'primevue/dialog';
+import { Button } from "primevue";
+import FormCategory from "./FormCategory.vue";
+import ProductTable from "./ProductTable.vue";
+import FormAddProduct from "./FormAddProduct.vue";
+
+
+
+const props = defineProps({
+    product: Array,
+    category: Array,
+});
+
+const selectedProduct = ref(null)
+
+const openCreate = () => {
+  selectedCategory.value = null
+  visible.value = true
+}
+
+const editProduct = (product) => {
+  selectedProduct.value = product
+  visible.value = true
+}
+
+
+const visible = ref(false);
 
 defineOptions({
     layout: AdminLayout,

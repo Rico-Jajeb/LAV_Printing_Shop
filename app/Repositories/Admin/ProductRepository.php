@@ -3,67 +3,38 @@
 namespace App\Repositories\Admin;
 
 use App\Models\CategoryProductModel;
+use App\Models\ProductModel;
 use Illuminate\Support\Arr;
 
-class CategoryRepository
+use Illuminate\Database\Eloquent\Collection;
+class ProductRepository
 {
 
     /**
-     * Get all category product data from db
+     * Get all product data from db
      *
      * @return void
      */
     public function getAll()
     {
-        return CategoryProductModel::all();
+        return ProductModel::all();
     }
 
-    /**
-     *  Insert a new category record into the database.
-     *
-     * @param array $data
-     * @return void
-     */
+
     public function create(array $data)
     {
-        return CategoryProductModel::create($data);
+        return ProductModel::create($data);
     }
 
-
-   
-    public function findById(int $id)
+      public function findById(int $id)
     {
-        return CategoryProductModel::find($id);
+        return ProductModel::find($id);
     }
-
-
-    /**
-     * Update the category
-     * it find the ID then send it to DB
-     *
-     * @param integer $id
-     * @param array $data
-     * @return void
-     */
-    public function update(int $id, array $data)
+    
+    // In ProductRepository
+    public function findByCategoryId(int $categoryId): Collection
     {
-        $category = $this->findById($id);
-
-        return $category->update($data);
-    }
-
-
- 
-
-    /**
-     * Delete the category 
-     *
-     * @param CategoryProductModel $category
-     * @return boolean
-     */
-    public function delete(CategoryProductModel $category): bool
-    {
-        return $category->delete();
+        return ProductModel::where('product_category_id', $categoryId)->get();
     }
 
 }   

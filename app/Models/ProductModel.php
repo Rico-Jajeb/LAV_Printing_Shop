@@ -19,13 +19,33 @@ class ProductModel extends Model
         'cost_price',
         'stock_quantity',
         'supplier',
-        'image',
-        'status',
-        'extra1',
-        'extra2',
-        'extra3',
-        'extra4' 
+         'image',
+         'status',
+        // 'extra1',
+        // 'extra2',
+        // 'extra3',
+        // 'extra4' 
     ];
+
+
+    protected $appends = ['image_url'];
+
+    /**
+     * Get the full Cloudflare R2 URL for the stored image.
+     * Combines the R2 base URL with the image path
+     * stored in the database.
+     * 
+     * @return string|null
+     */
+    public function getImageUrlAttribute(): ?string
+    {
+        if (!$this->image) {
+            return null;
+        }
+
+        return env('R2_URL') . '/' . $this->image;
+    }
+
 
 
     /**

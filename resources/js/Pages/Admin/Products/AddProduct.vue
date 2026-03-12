@@ -93,7 +93,7 @@
     </section>
 
     <section class="mt-4">
-      <FormAddProduct/>
+      <FormAddProduct :category="category" />
     </section>
   </main>
 </template>
@@ -101,6 +101,12 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import FormAddProduct from '@/Pages/Admin/Products/FormAddProduct.vue';
 import NavLink from "@/Components/NavLink.vue";
+
+const props = defineProps({
+    product: Array,
+    category: Array,
+});
+
 
 defineOptions({
     layout: AdminLayout

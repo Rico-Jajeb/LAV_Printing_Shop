@@ -35,7 +35,8 @@ Route::middleware([
 
 #ADMIN
 Route::get('/products', [ProductController::class, 'index'])->name('products');
-Route::get('/addProducts', [ProductController::class, 'getaddProducts'])->name('addProducts');
+Route::get('/addProducts', [ProductController::class, 'productsAdd'])->name('addProducts');
+Route::post('/products/create', [ProductController::class, 'store'])->name('products.store');
 
 
 Route::get('/category', [CategoryProductController::class, 'index'])->name('category');

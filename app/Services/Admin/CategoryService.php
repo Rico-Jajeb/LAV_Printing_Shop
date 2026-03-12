@@ -9,6 +9,7 @@ use Intervention\Image\Laravel\Facades\Image;
 
 
 use App\Repositories\Admin\CategoryRepository;
+use App\Repositories\Admin\ProductRepository;
 
 #Services
 use App\Services\ImageService;
@@ -16,11 +17,13 @@ use App\Services\ImageService;
 class CategoryService
 {
     protected $categoryRepository;
+    protected $productRepository;
     protected $imageService;
 
-    public function __construct(CategoryRepository $categoryRepository, ImageService $imageService)
+    public function __construct(CategoryRepository $categoryRepository,ProductRepository $productRepository,  ImageService $imageService)
     {
         $this->categoryRepository = $categoryRepository;
+        $this->productRepository = $productRepository;
         $this->imageService = $imageService;
     }
 
@@ -135,6 +138,12 @@ class CategoryService
      * Then check if the category Image exist 
      * in cloudflare r2, if so then delete it
      * then delete the category data in DB
+     * it also delete the category image, and product
+     * since they are connected
+     * 
+     * Result:
+     * Deleting category, also delete product that has that
+     * category, both db and image in cloudflare is being deleted
      *  
      * @param integer $id
      * @return boolean
@@ -143,10 +152,24 @@ class CategoryService
     {
         $category = $this->categoryRepository->findById($id);
 
+        // Delete all product images in this category from R2
+        $products = $this->productRepository->findByCategoryId($id);
+        
+        foreach ($products as $product) {
+            if ($product->image && Storage::disk('r2')->exists($product->image)) {
+                Storage::disk('r2')->delete($product->image);
+            }
+        }
+
+        // Delete the category image from R2
         if ($category->image && Storage::disk('r2')->exists($category->image)) {
             Storage::disk('r2')->delete($category->image);
         }
 
         return $this->categoryRepository->delete($category);
     }
+
+
+
+
 }
