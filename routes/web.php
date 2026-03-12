@@ -37,8 +37,9 @@ Route::middleware([
 Route::get('/products', [ProductController::class, 'index'])->name('products');
 Route::get('/addProducts', [ProductController::class, 'productsAdd'])->name('addProducts');
 Route::post('/products/create', [ProductController::class, 'store'])->name('products.store');
+Route::put('/products/update/{id}', [ProductController::class, 'update'])->name('products.update');
 Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
-
+Route::get('/products/edit/{id}',  [ProductController::class, 'edit'])->name('products.edit');
 
 Route::get('/category', [CategoryProductController::class, 'index'])->name('category');
 Route::post('/category/create', [CategoryProductController::class, 'store'])->name('category.create');

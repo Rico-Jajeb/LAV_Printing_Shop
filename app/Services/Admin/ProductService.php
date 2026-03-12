@@ -56,6 +56,64 @@ class ProductService
     }
 
 
+
+
+
+
+
+
+    /**
+     * Update The category by id
+     * Check if the id from user page is in DB
+     * then check if the update is also updating the image
+     * if yes, then it check if the image exist in cloudflare 
+     * if it exist then it delete the image in cloudflare
+     * then upload the latest image, 
+     * If no new image in update keep the existing image
+     * then send the data into repository DB
+     * 
+     * @param integer $id
+     * @param array $data
+     * @param [type] $image
+     * @return void
+     */
+    public function updateCategory(int $id, array $data, $image = null)
+    {
+        $product = $this->productRepository->findById($id);
+
+        if (!$product) {
+            throw new \Exception("Category not found");
+        }
+
+        if ($image) {
+            if ($product->image && Storage::disk('r2')->exists($product->image)) {
+                Storage::disk('r2')->delete($product->image);
+            }
+
+            $data['image'] = $this->imageService->processAndUpload(
+                $image,
+                'products',
+                600,
+                80
+            );
+        } else {
+            unset($data['image']);
+        }
+
+        return $this->productRepository->update($id, $data);
+    }
+
+
+
+
+public function findById(int $id)
+{
+    return $this->productRepository->findById($id);
+}
+
+
+
+
     public function deleteProduct(int $id): bool
     {
        

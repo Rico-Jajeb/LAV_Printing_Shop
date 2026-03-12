@@ -61,6 +61,22 @@ class ProductController extends Controller
 
 
 
+    /**
+     * Handle the Category Update
+     * Validate the incoming request via CategoryRequest.
+     * Pass the validated data and optional image file to the CategoryService for updating.
+     * After a successful update, redirect back to the category index with a success message.
+     * 
+     * @param [type] $id
+     * @param ProductRequest $request
+     * @return void
+     */
+    public function update($id, ProductRequest  $request){
+        $this->productService->updateCategory($id, $request->validated(), $request->file('image'));
+        return redirect()->route('products')->with('success', "Category Added Successfully!");
+    }
+
+
 
     /**
      * Delete Category Product by id
@@ -77,7 +93,16 @@ class ProductController extends Controller
 
 
 
+public function edit($id)
+{
+    $product = $this->productService->findById($id);
+    $categories = $this->categoryService->getCategoryProduct(); // reuse your existing method
 
+    return Inertia::render('Admin/Products/AddProduct', [
+        'product'  => $product,
+        'category' => $categories,
+    ]);
+}
 
 
     public function productsAdd()

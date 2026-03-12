@@ -86,14 +86,22 @@
 
     <!-- amo ini an header an -->
     <section class="mt-4">
-      <div>
+      <!-- <div>
         <h1 class="mb-2 font-bold text-2xl">Add New Product's</h1>
         <p class="text-body">Create a new product and add it to your inventory.</p>
-      </div>
+      </div> -->
+      <!-- Page header -->
+<h1 class="mb-2 font-bold text-3xl">
+    {{ product ? 'Edit Product' : 'Add Product' }}
+</h1>
+<p class="text-body">
+    {{ product ? 'Update product details.' : 'Add a new product to your inventory.' }}
+</p>
     </section>
 
     <section class="mt-4">
-      <FormAddProduct :category="category" />
+      <!-- <FormAddProduct :category="category" /> -->
+       <FormAddProduct :product="product" :category="category" />
     </section>
   </main>
 </template>
@@ -103,7 +111,8 @@ import FormAddProduct from '@/Pages/Admin/Products/FormAddProduct.vue';
 import NavLink from "@/Components/NavLink.vue";
 
 const props = defineProps({
-    product: Array,
+    // product: Array,
+    product: { type: Object, default: null },
     category: Array,
 });
 

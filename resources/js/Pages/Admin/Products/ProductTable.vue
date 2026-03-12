@@ -113,7 +113,9 @@
                 <Column field="Action" header="Action" style="width: 10%">
                     <template #body="{ data }">
                         <section class="flex gap-4">
-                            <button @click="$emit('edit', data)">
+                            <!-- <button @click="$emit('edit', data)"> -->
+                            <button @click="router.visit(route('products.edit', { id: data.id }))">
+
                                 <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"/>
                                 </svg>
@@ -187,9 +189,13 @@
                                     @click.stop
                                 >
                                     <button
-                                        @click="$emit('edit', item); closeMenu()"
+                                        @click="router.visit(route('products.edit', { id: item.id })); closeMenu()"
                                         class="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition"
                                     >
+                                    <!-- <button
+                                        @click="$emit('edit', item); closeMenu()"
+                                        class="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition"
+                                    > -->
                                         <i class="pi pi-pencil text-blue-500"></i>
                                         Edit
                                     </button>

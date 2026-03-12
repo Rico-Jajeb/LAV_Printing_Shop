@@ -1,8 +1,8 @@
 <template>
     <Form @submit.prevent="submit" enctype="multipart/form-data" class="mt-8">
-        <section class="grid grid-cols-6 gap-4">
+        <section class=" grid grid-cols-6 gap-4" >
             <section
-                class="sm:col-span-4 col-span-6 bg-neutral-primary-soft block p-6 border border-default rounded-lg shadow-xs"
+                class="bg-white shadow-xl sm:col-span-4 col-span-6 bg-neutral-primary-soft block p-6 border border-default rounded-lg shadow-xs"
             >
                 <h1 class="text-2xl font-bold">Product Information</h1>
 
@@ -76,7 +76,7 @@
             </section>
 
             <div
-                class="sm:col-span-2 col-span-6 bg-neutral-primary-soft block p-6 border border-default rounded-lg shadow-xs"
+                class="bg-white shadow-xl sm:col-span-2 col-span-6 bg-neutral-primary-soft block p-6 border border-default rounded-lg shadow-xs"
             >
                 <h1 class="text-2xl font-bold">Place Image</h1>
                 <h1 class="mt-1 text-sm">
@@ -142,9 +142,9 @@
         </section>
 
         <!-- amo ini an kanan Contacts and status -->
-        <section class="grid grid-cols-6 gap-4 mt-8">
+        <section class="grid grid-cols-6 gap-4 mt-8 ">
             <section
-                class="sm:col-span-4 col-span-6 bg-neutral-primary-soft block p-6 border border-default rounded-lg shadow-xs"
+                class="bg-white shadow-xl sm:col-span-4 col-span-6 bg-neutral-primary-soft block p-6 border border-default rounded-lg shadow-xs"
             >
                 <h1 class="text-2xl font-bold">Pricing & Inventory</h1>
 
@@ -186,7 +186,7 @@
                         </div>
                     </div>
                 </section>
-                <section class="grid grid-cols-2 mt-4 gap-8">
+                <section class=" grid grid-cols-2 mt-4 gap-8">
                     <div class="sm:col-span-1 col-span-2">
                         <label
                             for="first_name"
@@ -227,7 +227,7 @@
 
             <!-- amo ini kanan Submit  -->
             <section
-                class="sm:col-span-2 col-span-6 h-46 bg-neutral-primary-soft block p-6 border border-default rounded-lg shadow-xs"
+                class="bg-white shadow-xl sm:col-span-2 col-span-6 h-46 bg-neutral-primary-soft block p-6 border border-default rounded-lg shadow-xs"
             >
                 <h1 class="text-2xl font-bold">Actions</h1>
 
@@ -289,32 +289,24 @@
         </section>
     </Form>
 </template>
+
 <script setup>
+import { ref, watch, computed } from "vue";
+import { useForm, Form } from "@inertiajs/vue3";
+import { useToast } from "primevue/usetoast";
 import InputText from "primevue/inputtext";
 import Textarea from "primevue/textarea";
 import Select from "primevue/select";
-import { usePrimeVue } from "primevue/config";
-import { useToast } from "primevue/usetoast";
-
-import FileUpload from "primevue/fileupload";
-import { useForm } from "@inertiajs/vue3";
-import { Button } from "primevue";
-import { Form } from "@inertiajs/vue3";
 import ToggleSwitch from "primevue/toggleswitch";
-import { ref, watch, computed } from "vue";
 
 const toast = useToast();
 
 const props = defineProps({
-    product: {
-        type: Object,
-        default: null,
-    },
-    category: {
-        type: Array,
-        default: () => [],
-    },
+    product: { type: Object, default: null },
+    category: { type: Array, default: () => [] },
 });
+
+const isEditing = computed(() => !!props.product);
 
 const form = useForm({
     name: "",
@@ -330,48 +322,52 @@ const form = useForm({
 
 const previewSrc = ref(null);
 
-const selectedCategoryName = computed(() => {
-    const found = props.category.find(
-        (categ) => categ.id === form.product_category_id,
-    );
-    return found ? found.name : "";
-});
+// Same pattern as FormCategory — watch the prop and populate
+watch(
+    () => props.product,
+    (newVal) => {
+        if (newVal) {
+            form.name                = newVal.name ?? "";
+            form.description         = newVal.description ?? "";
+            form.selling_price       = newVal.selling_price ?? "";
+            form.cost_price          = newVal.cost_price ?? "";
+            form.stock_quantity      = newVal.stock_quantity ?? "";
+            form.supplier            = newVal.supplier ?? "";
+            form.product_category_id = newVal.product_category_id ?? null;
+            form.status              = newVal.status ?? true;
+            form.image               = null; // always reset file input
+            previewSrc.value         = newVal.image_url ?? null;
+        } else {
+            form.reset();
+            previewSrc.value = null;
+        }
+    },
+    { immediate: true }
+);
 
-// kanan file image
 const onFileSelect = (event) => {
     const file = event.target.files[0];
     if (!file) return;
-
     form.image = file;
-
     const reader = new FileReader();
-    reader.onload = (e) => {
-        previewSrc.value = e.target.result;
-    };
+    reader.onload = (e) => { previewSrc.value = e.target.result; };
     reader.readAsDataURL(file);
 };
 
 const submit = () => {
-    form.post("/products/create", {
-        forceFormData: true,
-        onSuccess: () => {
-            toast.add({
-                severity: "success",
-                summary: "Success",
-                detail: "Category Added Successfully!",
-                life: 20000,
+    if (isEditing.value) {
+        form.transform((data) => ({ ...data, _method: "PUT" }))
+            .post(`/products/update/${props.product.id}`, {
+                forceFormData: true,
+                onSuccess: () => toast.add({ severity: "success", summary: "Success", detail: "Product updated successfully!", life: 3000 }),
+                onError: () => toast.add({ severity: "error", summary: "Error", detail: "Failed to update product.", life: 3000 }),
             });
-        },
-        onError: () => {
-            toast.add({
-                severity: "error",
-                summary: "Error",
-                detail: "Failed to create category. Please check the form.",
-                life: 20000,
-            });
-        },
-    });
+    } else {
+        form.post("/products/create", {
+            forceFormData: true,
+            onSuccess: () => toast.add({ severity: "success", summary: "Success", detail: "Product added successfully!", life: 3000 }),
+            onError: () => toast.add({ severity: "error", summary: "Error", detail: "Failed to create product.", life: 3000 }),
+        });
+    }
 };
-
-
 </script>

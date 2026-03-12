@@ -38,6 +38,22 @@ class ProductRepository
     }
 
 
+     /**
+     * Update the category
+     * it find the ID then send it to DB
+     *
+     * @param integer $id
+     * @param array $data
+     * @return void
+     */
+    public function update(int $id, array $data)
+    {
+        $category = $this->findById($id);
+
+        return $category->update($data);
+    }
+
+
     
     /**
      * Delete the category 
