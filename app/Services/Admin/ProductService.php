@@ -40,7 +40,15 @@ class ProductService
         }
     }
 
-
+    /**
+     * Recieve the validated data that the controller send
+     * then insert the data and image into the product repo
+     * also use the imageservice to handle the image processing
+     *
+     * @param array $data
+     * @param [type] $image
+     * @return void
+     */
     public function createProduct(array $data, $image = null){
 
        if ($image) {
@@ -112,6 +120,29 @@ public function findById(int $id)
 }
 
 
+
+
+
+    /**
+     * Update the category status selected
+     * check the id is in db
+     * if the id is not in db then it throw the error category not found
+     * but if it exist then now update the status
+     *
+     * @param integer $id
+     * @param array $data
+     * @return void
+     */
+    public function updateStatus(int $id, array $data)
+    {
+        $category = $this->productRepository->findById($id);
+
+        if (!$category) {
+             throw new \Exception("Category not found");
+        }
+
+        return $this->productRepository->update($id, $data);
+    }
 
 
     public function deleteProduct(int $id): bool

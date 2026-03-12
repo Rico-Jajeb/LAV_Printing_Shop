@@ -7,6 +7,7 @@ use App\Models\ProductModel;
 use Illuminate\Support\Arr;
 
 use Illuminate\Database\Eloquent\Collection;
+
 class ProductRepository
 {
 
@@ -20,27 +21,42 @@ class ProductRepository
         return ProductModel::all();
     }
 
-
+    /**
+     * Create New Product 
+     *
+     * @param array $data
+     * @return void
+     */
     public function create(array $data)
     {
         return ProductModel::create($data);
     }
 
-      public function findById(int $id)
+    /**
+     * Find data by id in the db
+     *
+     * @param integer $id
+     */
+    public function findById(int $id)
     {
         return ProductModel::find($id);
     }
-    
-    // In ProductRepository
+
+    /**
+     * Find Product Category By Id
+     * This is customize to find only product_category_id
+     *
+     * @param integer $categoryId
+     * @return Collection
+     */
     public function findByCategoryId(int $categoryId): Collection
     {
         return ProductModel::where('product_category_id', $categoryId)->get();
     }
 
-
-     /**
-     * Update the category
-     * it find the ID then send it to DB
+    /**
+     * Update the product
+     * Find specific product by id
      *
      * @param integer $id
      * @param array $data
@@ -48,22 +64,19 @@ class ProductRepository
      */
     public function update(int $id, array $data)
     {
-        $category = $this->findById($id);
+        $product = $this->findById($id);
 
-        return $category->update($data);
+        return $product->update($data);
     }
 
-
-    
     /**
-     * Delete the category 
+     * Delete the Product by id 
      *
-     * @param ProductModel $category
+     * @param ProductModel $product
      * @return boolean
      */
     public function delete(ProductModel $products): bool
     {
         return $products->delete();
     }
-
-}   
+}

@@ -99,8 +99,8 @@
                     <span class="ms-3">Add Product</span>
                 </NavLink>
                 <!-- amo ini an kanan Form Category -->
-                <Dialog v-model:visible="visible"  :header="selectedCategory ? 'Edit Category' : 'Add Category'" :style="{ width: '25rem' }" >
-                    <FormAddProduct :category="selectedCategory" :key="selectedCategory?.id || 'new'" />
+                <Dialog v-model:visible="visible"  :header="selectedProduct ? 'Edit Category' : 'Add Category'" :style="{ width: '25rem' }" >
+                    <FormAddProduct :category="selectedProduct" :key="selectedProduct?.id || 'new'" />
                 </Dialog>
            
             </div>
@@ -135,10 +135,10 @@ const props = defineProps({
 
 const selectedProduct = ref(null)
 
-const openCreate = () => {
-  selectedCategory.value = null
-  visible.value = true
-}
+// const openCreate = () => {
+//   selectedCategory.value = null
+//   visible.value = true
+// }
 
 const editProduct = (product) => {
   selectedProduct.value = product

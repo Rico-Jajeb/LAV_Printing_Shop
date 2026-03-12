@@ -12,6 +12,7 @@ import Aura from '@primeuix/themes/aura';
 import ToastService from 'primevue/toastservice'
 import ConfirmationService from 'primevue/confirmationservice';
 import 'primeicons/primeicons.css';                       // icons
+import Tooltip from 'primevue/tooltip';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -29,6 +30,7 @@ createInertiaApp({
             })
             .use(ToastService)
             .use(ConfirmationService)
+            .directive('tooltip', Tooltip)  
             .mount(el);
     },
     progress: {

@@ -565,6 +565,8 @@ import { useConfirm } from "primevue/useconfirm";
 
 import Skeleton from "primevue/skeleton";
 
+
+
 const confirm = useConfirm();
 const toast = useToast();
 
@@ -646,7 +648,7 @@ const updateStatus = (data) => {
     data.status = !data.status;
     // FIX: Route corrected from /category/ to /product/
     router.patch(
-        `/category/${data.id}/status`,
+        `/products/${data.id}/status`,
         { status: data.status },
         {
             preserveScroll: true,

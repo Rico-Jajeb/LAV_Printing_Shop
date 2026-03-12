@@ -359,14 +359,14 @@ const submit = () => {
         form.transform((data) => ({ ...data, _method: "PUT" }))
             .post(`/products/update/${props.product.id}`, {
                 forceFormData: true,
-                onSuccess: () => toast.add({ severity: "success", summary: "Success", detail: "Product updated successfully!", life: 3000 }),
-                onError: () => toast.add({ severity: "error", summary: "Error", detail: "Failed to update product.", life: 3000 }),
+                onSuccess: () => toast.add({ severity: "success", summary: "Success", detail: "Product updated successfully!", life: 20000 }),
+                onError: () => toast.add({ severity: "error", summary: "Error", detail: "Failed to update product.", life: 20000 }),
             });
     } else {
         form.post("/products/create", {
             forceFormData: true,
-            onSuccess: () => toast.add({ severity: "success", summary: "Success", detail: "Product added successfully!", life: 3000 }),
-            onError: () => toast.add({ severity: "error", summary: "Error", detail: "Failed to create product.", life: 3000 }),
+            onSuccess: () => toast.add({ severity: "success", summary: "Success", detail: "Product added successfully!", life: 20000 }),
+            onError: () => toast.add({ severity: "error", summary: "Error", detail: "Failed to create product.", life: 20000 }),
         });
     }
 };

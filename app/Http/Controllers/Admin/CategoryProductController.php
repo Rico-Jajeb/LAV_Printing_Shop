@@ -63,8 +63,6 @@ class CategoryProductController extends Controller
         return redirect()->route('category')->with('success', "Category Added Successfully!");
     }
 
-
-
     /**
      * Handle the Category Update
      * Validate the incoming request via CategoryRequest.
@@ -79,8 +77,6 @@ class CategoryProductController extends Controller
         $this->categoryService->updateCategory($id, $request->validated(), $request->file('image'));
         return redirect()->route('category')->with('success', "Category Added Successfully!");
     }
-
-
 
     /**
      * Handle the Category Status
@@ -98,7 +94,6 @@ class CategoryProductController extends Controller
         return redirect()->route('category')->with('success', "Category status updated Successfully!");
     }
 
-
     /**
      * Delete Category Product by id
      *
@@ -110,6 +105,5 @@ class CategoryProductController extends Controller
         $this->categoryService->deleteCategory($id);
         return redirect()->back()->with('success', 'Category deleted successfully!');
     }
-
 
 }

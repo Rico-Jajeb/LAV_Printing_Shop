@@ -40,6 +40,8 @@ Route::post('/products/create', [ProductController::class, 'store'])->name('prod
 Route::put('/products/update/{id}', [ProductController::class, 'update'])->name('products.update');
 Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
 Route::get('/products/edit/{id}',  [ProductController::class, 'edit'])->name('products.edit');
+Route::patch('/products/{id}/status', [ProductController::class, 'statusUpdate'])->name('products.updateStatus');
+
 
 Route::get('/category', [CategoryProductController::class, 'index'])->name('category');
 Route::post('/category/create', [CategoryProductController::class, 'store'])->name('category.create');
