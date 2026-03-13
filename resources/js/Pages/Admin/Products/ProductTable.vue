@@ -1,35 +1,67 @@
 <template>
-    <main class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-8">
-        <!-- View Toggle -->
-        <div class="flex justify-between items-center mb-4">
-            <IconField>
-                <InputIcon>
-                    <i class="pi pi-search" />
-                </InputIcon>
-                <InputText
-                    v-model="filters['global'].value"
-                    placeholder="Global Search"
-                />
-            </IconField>
+    <!-- View Toggle -->
+    <section class="bg-white rounded-lg shadow-xl p-8 flex justify-between items-center mb-4">
+        <IconField>
+            <InputIcon>
+                <i class="pi pi-search" />
+            </InputIcon>
+            <InputText
+                v-model="filters['global'].value"
+                placeholder="Global Search"
+            />
+        </IconField>
 
-            <div class="flex gap-2">
-                <Button
-                    :outlined="viewMode !== 'table'"
-                    icon="pi pi-list"
-                    @click="viewMode = 'table'"
-                    aria-label="Table view"
-                    v-tooltip="'Table View'"
-                />
-                <Button
-                    :outlined="viewMode !== 'card'"
-                    icon="pi pi-th-large"
-                    @click="viewMode = 'card'"
-                    aria-label="Card view"
-                    v-tooltip="'Card View'"
-                />
-            </div>
+        <div class="flex gap-2 items-center">
+            <!-- Category Filter Select -->
+            <Select
+                v-model="selectedCategoryFilter"
+                :options="[{ id: null, name: 'All Categories' }, ...(props.category ?? [])]"
+                optionLabel="name"
+                placeholder="All Categories"
+                class="w-48"
+                @change="cardStart = 0"
+            >
+                <template #option="{ option }">
+                    <div class="flex items-center gap-2">
+                        <i
+                            class="pi text-xs"
+                            :class="option.id === null ? 'pi-objects-column' : 'pi-tag'"
+                        />
+                        {{ option.name }}
+                    </div>
+                </template>
+                <template #value="{ value }">
+                    <div v-if="value" class="flex items-center gap-2">
+                        <i
+                            class="pi text-xs"
+                            :class="value.id === null ? 'pi-objects-column' : 'pi-tag'"
+                        />
+                        {{ value.name }}
+                    </div>
+                    <span v-else>All Categories</span>
+                </template>
+            </Select>
+
+            <!-- View Toggles -->
+            <Button
+                :outlined="viewMode !== 'card'"
+                icon="pi pi-th-large"
+                @click="viewMode = 'card'"
+                aria-label="Card view"
+                v-tooltip.top="'Card View'"
+            />
+            <Button
+                :outlined="viewMode !== 'table'"
+                icon="pi pi-list"
+                @click="viewMode = 'table'"
+                aria-label="Table view"
+                v-tooltip.top="'Table View'"
+            />
         </div>
+    </section>
 
+    <main     :class="viewMode === 'table' ? 'bg-white shadow-xl sm:rounded-lg' : ''"
+    class=" mb-16 overflow-hidden  sm:rounded-lg p-8">
         <!-- TABLE VIEW -->
         <div v-if="viewMode === 'table'" class="card">
             <DataTable
@@ -88,7 +120,6 @@
                             fill="transparent"
                             animationDuration=".5s"
                         />
-
                         <span v-else>{{ data.name }}</span>
                     </template>
                     <template #filter="{ filterModel }">
@@ -110,7 +141,6 @@
                         <Skeleton v-if="isLoading" width="80%" height="1rem" />
                         <span v-else>{{ data.description }}</span>
                     </template>
-
                     <template #filter="{ filterModel }">
                         <InputText
                             v-model="filterModel.value"
@@ -145,7 +175,6 @@
                     </template>
                 </Column>
 
-                <!-- FIX: Use type="number" for price fields -->
                 <Column
                     field="selling_price"
                     header="Selling Price"
@@ -243,9 +272,7 @@
                         >
                             <template #option="slotProps">
                                 <Tag
-                                    :value="
-                                        slotProps.option ? 'Active' : 'Inactive'
-                                    "
+                                    :value="slotProps.option ? 'Active' : 'Inactive'"
                                     :severity="getSeverity(slotProps.option)"
                                 />
                             </template>
@@ -256,13 +283,8 @@
                 <Column field="Action" header="Action" style="width: 10%">
                     <template #body="{ data }">
                         <section class="flex gap-4">
-                            <!-- <button @click="$emit('edit', data)"> -->
                             <button
-                                @click="
-                                    router.visit(
-                                        route('products.edit', { id: data.id }),
-                                    )
-                                "
+                                @click="router.visit(route('products.edit', { id: data.id }))"
                             >
                                 <svg
                                     class="w-6 h-6 text-gray-800 dark:text-white"
@@ -330,42 +352,25 @@
         <div v-else>
             <Deferred :data="['product']">
                 <template #fallback>
-                    <div
-                        style="
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            gap: 8px;
-                            padding: 48px 0;
-                            color: #6b7280;
-                        "
-                    >
-                        <svg
-                            style="
-                                width: 15px;
-                                height: 15px;
-                                flex-shrink: 0;
-                                animation: card-spin 0.5s linear infinite;
-                            "
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                        <div
+                            v-for="n in 8"
+                            :key="n"
+                            class="bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden"
                         >
-                            <circle
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="#e5e7eb"
-                                stroke-width="4"
-                            />
-                            <path
-                                d="M12 2a10 10 0 0 1 10 10"
-                                stroke="#6b7280"
-                                stroke-width="4"
-                                stroke-linecap="round"
-                            />
-                        </svg>
-                        <span style="line-height: 1">Fetching products…</span>
+                            <Skeleton width="100%" height="192px" borderRadius="0" />
+                            <div class="p-4 flex flex-col gap-3">
+                                <Skeleton width="70%" height="1.1rem" />
+                                <Skeleton width="100%" height="0.85rem" />
+                                <Skeleton width="80%" height="0.85rem" />
+                                <div class="flex gap-3 mt-1">
+                                    <Skeleton width="55px" height="0.85rem" />
+                                    <Skeleton width="55px" height="0.85rem" />
+                                    <Skeleton width="45px" height="0.85rem" />
+                                </div>
+                                <Skeleton width="60px" height="1.3rem" borderRadius="9999px" />
+                            </div>
+                        </div>
                     </div>
                 </template>
 
@@ -387,7 +392,7 @@
                         <div
                             v-for="item in paginatedCategories"
                             :key="item.id"
-                            class="relative bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-visible"
+                            class="relative bg-white border border-gray-200 rounded-xl shadow-xl hover:shadow-md transition-shadow duration-200 overflow-visible"
                         >
                             <!-- Three-dot menu button -->
                             <div class="absolute top-3 right-3 z-10">
@@ -395,9 +400,7 @@
                                     @click.stop="toggleMenu(item.id)"
                                     class="w-8 h-8 flex items-center justify-center rounded-full bg-white/80 hover:bg-gray-100 shadow transition"
                                 >
-                                    <i
-                                        class="pi pi-ellipsis-v text-gray-600"
-                                    ></i>
+                                    <i class="pi pi-ellipsis-v text-gray-600"></i>
                                 </button>
 
                                 <!-- Dropdown Menu -->
@@ -407,43 +410,20 @@
                                     @click.stop
                                 >
                                     <button
-                                        @click="
-                                            router.visit(
-                                                route('products.edit', {
-                                                    id: item.id,
-                                                }),
-                                            );
-                                            closeMenu();
-                                        "
+                                        @click="router.visit(route('products.edit', { id: item.id })); closeMenu();"
                                         class="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition"
                                     >
-                                        <!-- <button
-                                        @click="$emit('edit', item); closeMenu()"
-                                        class="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition"
-                                    > -->
-                                        <i
-                                            class="pi pi-pencil text-blue-500"
-                                        ></i>
+                                        <i class="pi pi-pencil text-blue-500"></i>
                                         Edit
                                     </button>
 
-                                    <div
-                                        class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition"
-                                    >
+                                    <div class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
                                         <span class="flex items-center gap-2">
                                             <i
                                                 class="pi pi-power-off"
-                                                :class="
-                                                    item.status
-                                                        ? 'text-green-500'
-                                                        : 'text-gray-400'
-                                                "
+                                                :class="item.status ? 'text-green-500' : 'text-gray-400'"
                                             ></i>
-                                            {{
-                                                item.status
-                                                    ? "Active"
-                                                    : "Inactive"
-                                            }}
+                                            {{ item.status ? "Active" : "Inactive" }}
                                         </span>
                                         <ToggleSwitch
                                             :modelValue="item.status"
@@ -451,15 +431,10 @@
                                         />
                                     </div>
 
-                                    <div
-                                        class="border-t border-gray-100 my-1"
-                                    ></div>
+                                    <div class="border-t border-gray-100 my-1"></div>
 
                                     <button
-                                        @click="
-                                            confirmDelete(item.id);
-                                            closeMenu();
-                                        "
+                                        @click="confirmDelete(item); closeMenu();"
                                         class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition"
                                     >
                                         <i class="pi pi-trash"></i>
@@ -469,15 +444,16 @@
                             </div>
 
                             <!-- Image -->
-                            <div
-                                class="w-full h-48 bg-gray-100 overflow-hidden rounded-t-xl"
-                            >
-                                <img
-                                    v-if="item.image_url"
-                                    :src="item.image_url"
-                                    :alt="item.name"
-                                    class="w-full h-full object-cover"
-                                />
+                            <div class="w-full h-48 px-4 pt-4 bg-white overflow-hidden rounded-t-xl">
+                           <Image
+    v-if="item.image_url"
+    :src="item.image_url"
+    :alt="item.name"
+    imageClass="w-full h-full object-cover rounded-lg"
+    imageStyle="height: 192px;"
+    class="w-full block"
+    preview
+/>
                                 <div
                                     v-else
                                     class="w-full h-full flex items-center justify-center text-gray-400"
@@ -488,49 +464,24 @@
 
                             <!-- Content -->
                             <div class="p-4">
-                                <h3
-                                    class="font-semibold text-gray-800 text-base truncate"
-                                >
+                                <h3 class="font-semibold text-gray-800 text-base truncate">
                                     {{ item.name }}
                                 </h3>
-                                <p
-                                    class="text-sm text-gray-500 mt-1 line-clamp-2"
-                                >
+                                <p class="text-sm text-gray-500 mt-1 line-clamp-2">
                                     {{ item.description || "No description." }}
                                 </p>
 
                                 <!-- Price Info -->
-                                <div
-                                    class="mt-2 flex gap-3 text-xs text-gray-600"
-                                >
-                                    <span
-                                        >Sell:
-                                        <strong>{{
-                                            item.selling_price
-                                        }}</strong></span
-                                    >
-                                    <span
-                                        >Cost:
-                                        <strong>{{
-                                            item.cost_price
-                                        }}</strong></span
-                                    >
-                                    <span
-                                        >QTY:
-                                        <strong>{{
-                                            item.stock_quantity
-                                        }}</strong></span
-                                    >
+                                <div class="mt-2 flex gap-3 text-xs text-gray-600">
+                                    <span>Sell: <strong>{{ item.selling_price }}</strong></span>
+                                    <span>Cost: <strong>{{ item.cost_price }}</strong></span>
+                                    <span>QTY: <strong>{{ item.stock_quantity }}</strong></span>
                                 </div>
 
                                 <!-- Status Badge -->
                                 <span
                                     class="inline-block mt-3 text-xs font-medium px-2 py-0.5 rounded-full"
-                                    :class="
-                                        item.status
-                                            ? 'bg-green-100 text-green-700'
-                                            : 'bg-red-100 text-red-600'
-                                    "
+                                    :class="item.status ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'"
                                 >
                                     {{ item.status ? "Active" : "Inactive" }}
                                 </span>
@@ -542,10 +493,7 @@
                     <div class="flex justify-between items-center mt-6">
                         <span class="text-sm text-gray-500">
                             Showing {{ cardStart + 1 }}–{{
-                                Math.min(
-                                    cardStart + cardRows,
-                                    filteredCategories.length,
-                                )
+                                Math.min(cardStart + cardRows, filteredCategories.length)
                             }}
                             of {{ filteredCategories.length }}
                         </span>
@@ -574,7 +522,6 @@ import Column from "primevue/column";
 import IconField from "primevue/iconfield";
 import InputIcon from "primevue/inputicon";
 import InputText from "primevue/inputtext";
-// FIX: Import InputNumber for numeric fields
 import InputNumber from "primevue/inputnumber";
 import Select from "primevue/select";
 import Tag from "primevue/tag";
@@ -584,12 +531,11 @@ import { Button } from "primevue";
 import ConfirmDialog from "primevue/confirmdialog";
 import ToggleSwitch from "primevue/toggleswitch";
 import Paginator from "primevue/paginator";
+import Skeleton from "primevue/skeleton";
 
 import { router } from "@inertiajs/vue3";
 import { useToast } from "primevue/usetoast";
 import { useConfirm } from "primevue/useconfirm";
-
-import Skeleton from "primevue/skeleton";
 
 const confirm = useConfirm();
 const toast = useToast();
@@ -599,7 +545,6 @@ const props = defineProps({
     category: Array,
 });
 
-// amo ini an kanan category product ngan category
 const getCategoryName = (id) => {
     return props.category?.find((c) => c.id === id)?.name ?? "Uncategorized";
 };
@@ -611,13 +556,12 @@ const enrichedProducts = computed(() => {
     }));
 });
 
-// kanan Skeleten ini para han table
 const isLoading = computed(() => !props.product);
 const skeletonRows = Array.from({ length: 5 }, (_, i) => ({ id: i }));
 
 const emit = defineEmits(["edit"]);
 
-const viewMode = ref("table");
+const viewMode = ref("card");
 const openMenuId = ref(null);
 
 const toggleMenu = (id) => {
@@ -630,9 +574,7 @@ const closeMenu = () => {
 
 const handleOutsideClick = () => closeMenu();
 onMounted(() => document.addEventListener("click", handleOutsideClick));
-onBeforeUnmount(() =>
-    document.removeEventListener("click", handleOutsideClick),
-);
+onBeforeUnmount(() => document.removeEventListener("click", handleOutsideClick));
 
 const cardRows = ref(8);
 const cardStart = ref(0);
@@ -642,25 +584,34 @@ const onCardPageChange = (event) => {
     cardRows.value = event.rows;
 };
 
+// Category filter
+const selectedCategoryFilter = ref(null);
+
 const filteredCategories = computed(() => {
+    let result = props.product ?? [];
+
+    if (selectedCategoryFilter.value?.id) {
+        result = result.filter(
+            (p) => p.product_category_id === selectedCategoryFilter.value.id
+        );
+    }
+
     const search = filters.value["global"].value?.toLowerCase();
-    if (!search) return props.product ?? [];
-    return (props.product ?? []).filter(
+    if (!search) return result;
+
+    return result.filter(
         (c) =>
             c.name?.toLowerCase().includes(search) ||
             c.description?.toLowerCase().includes(search) ||
             String(c.selling_price)?.includes(search) ||
             String(c.cost_price)?.includes(search) ||
             String(c.stock_quantity)?.includes(search) ||
-            c.supplier?.toLowerCase().includes(search),
+            c.supplier?.toLowerCase().includes(search)
     );
 });
 
 const paginatedCategories = computed(() =>
-    filteredCategories.value.slice(
-        cardStart.value,
-        cardStart.value + cardRows.value,
-    ),
+    filteredCategories.value.slice(cardStart.value, cardStart.value + cardRows.value)
 );
 
 const selectedProduct = ref();
@@ -669,13 +620,11 @@ const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     name: { value: null, matchMode: FilterMatchMode.CONTAINS },
     description: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    // FIX: Use EQUALS for numeric fields so InputNumber works correctly
     selling_price: { value: null, matchMode: FilterMatchMode.EQUALS },
     cost_price: { value: null, matchMode: FilterMatchMode.EQUALS },
     stock_quantity: { value: null, matchMode: FilterMatchMode.EQUALS },
     supplier: { value: null, matchMode: FilterMatchMode.CONTAINS },
     status: { value: null, matchMode: FilterMatchMode.EQUALS },
-    // filters ref
     category_name: { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
 
@@ -685,7 +634,6 @@ const getSeverity = (status) => (status ? "success" : "danger");
 
 const updateStatus = (data) => {
     data.status = !data.status;
-    // FIX: Route corrected from /category/ to /product/
     router.patch(
         `/products/${data.id}/status`,
         { status: data.status },
@@ -708,7 +656,7 @@ const updateStatus = (data) => {
                     life: 3000,
                 });
             },
-        },
+        }
     );
 };
 
