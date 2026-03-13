@@ -108,6 +108,7 @@
 
         <section class="mt-4">
                 <ProductTable :product="product"
+                 :category="category"
                     @edit="editProduct" />
         </section>
 

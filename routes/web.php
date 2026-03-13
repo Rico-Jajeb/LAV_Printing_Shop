@@ -34,15 +34,15 @@ Route::middleware([
 
 
 #ADMIN
+#-------------- Products --------------#
 Route::get('/products', [ProductController::class, 'index'])->name('products');
 Route::get('/addProducts', [ProductController::class, 'productsAdd'])->name('addProducts');
+Route::get('/products/edit/{id}',  [ProductController::class, 'edit'])->name('products.edit');
 Route::post('/products/create', [ProductController::class, 'store'])->name('products.store');
 Route::put('/products/update/{id}', [ProductController::class, 'update'])->name('products.update');
 Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
-Route::get('/products/edit/{id}',  [ProductController::class, 'edit'])->name('products.edit');
 Route::patch('/products/{id}/status', [ProductController::class, 'statusUpdate'])->name('products.updateStatus');
-
-
+#-------------- Category Product --------------#
 Route::get('/category', [CategoryProductController::class, 'index'])->name('category');
 Route::post('/category/create', [CategoryProductController::class, 'store'])->name('category.create');
 Route::put('/category/update/{id}', [CategoryProductController::class, 'update'])->name('category.update');

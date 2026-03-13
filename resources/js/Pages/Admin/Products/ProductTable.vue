@@ -35,7 +35,7 @@
             <DataTable
                 v-model:filters="filters"
                 v-model:selection="selectedProduct"
-                :value="isLoading ? skeletonRows : product"
+                :value="isLoading ? skeletonRows : enrichedProducts"
                 stateStorage="session"
                 stateKey="dt-state-demo-session"
                 paginator
@@ -52,6 +52,7 @@
                     'supplier',
                     'status',
                     'image_url',
+                    'category_name',
                 ]"
                 tableStyle="min-width: 50rem"
             >
@@ -115,6 +116,31 @@
                             v-model="filterModel.value"
                             type="text"
                             placeholder="Search description"
+                        />
+                    </template>
+                </Column>
+
+                <Column
+                    field="category_name"
+                    header="Category"
+                    sortable
+                    style="width: 25%"
+                >
+                    <template #body="{ data }">
+                        <ProgressSpinner
+                            v-if="isLoading"
+                            style="width: 15px; height: 15px"
+                            strokeWidth="8"
+                            fill="transparent"
+                            animationDuration=".5s"
+                        />
+                        <span v-else>{{ data.category_name }}</span>
+                    </template>
+                    <template #filter="{ filterModel }">
+                        <InputText
+                            v-model="filterModel.value"
+                            type="text"
+                            placeholder="Search by category"
                         />
                     </template>
                 </Column>
@@ -565,13 +591,24 @@ import { useConfirm } from "primevue/useconfirm";
 
 import Skeleton from "primevue/skeleton";
 
-
-
 const confirm = useConfirm();
 const toast = useToast();
 
 const props = defineProps({
     product: Array,
+    category: Array,
+});
+
+// amo ini an kanan category product ngan category
+const getCategoryName = (id) => {
+    return props.category?.find((c) => c.id === id)?.name ?? "Uncategorized";
+};
+
+const enrichedProducts = computed(() => {
+    return (props.product ?? []).map((p) => ({
+        ...p,
+        category_name: getCategoryName(p.product_category_id),
+    }));
 });
 
 // kanan Skeleten ini para han table
@@ -638,6 +675,8 @@ const filters = ref({
     stock_quantity: { value: null, matchMode: FilterMatchMode.EQUALS },
     supplier: { value: null, matchMode: FilterMatchMode.CONTAINS },
     status: { value: null, matchMode: FilterMatchMode.EQUALS },
+    // filters ref
+    category_name: { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
 
 const statuses = [true, false];

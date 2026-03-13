@@ -68,12 +68,12 @@
                             />
                         </svg>
                         {{ form.image ? form.image.name : "Choose Image" }}
-                        <input
-                            type="file"
-                            accept="image/*"
-                            class="hidden"
-                            @change="onFileSelect"
-                        />
+                   <input
+    type="file"
+    accept="image/*"
+    class="hidden"
+    @change="(event) => onFileSelect(event, (file) => form.image = file)"
+/>
                     </label>
 
                     <img
@@ -94,111 +94,22 @@
         </Form>
     </main>
 </template>
-<script setup>
-import { InputText } from "primevue";
-import { useForm } from "@inertiajs/vue3";
-import { Button } from "primevue";
+<script setup lang="ts">
+import { InputText, Button, ToggleSwitch } from "primevue";
 import { Form } from "@inertiajs/vue3";
-import ToggleSwitch from "primevue/toggleswitch";
-import { ref, watch } from "vue";
-import { useToast } from "primevue/usetoast";
-const toast = useToast();
+import { useCategoryForm } from "@/Composables/Products/useCategoryForm";
+import { useImagePreview } from "@/Composables/Products/useImagePreview";
 
-// knan update
-const props = defineProps({
-    category: {
-        type: Object,
-        default: null,
-    },
-});
+interface Category {
+    id: number;
+    name: string;
+    description: string;
+    status: boolean;
+    image_url?: string | null;
+}
 
-const form = useForm({
-    name: "",
-    description: "",
-    status: true,
-    image: null,
-});
+const props = defineProps<{ category?: Category | null }>();
 
-const previewSrc = ref(null);
-
-watch(
-    () => props.category,
-    (newVal) => {
-        if (newVal) {
-            form.name = newVal.name ?? "";
-            form.description = newVal.description ?? "";
-            form.status = newVal.status ?? true;
-            form.image = null;
-            previewSrc.value = newVal.image_url ?? null;
-        } else {
-            form.name = "";
-            form.description = "";
-            form.status = true;
-            form.image = null;
-            previewSrc.value = null;
-        }
-    },
-    { immediate: true },
-);
-
-// kanan file image
-const onFileSelect = (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    form.image = file;
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        previewSrc.value = e.target.result;
-    };
-    reader.readAsDataURL(file);
-};
-
-const submit = () => {
-    if (props.category) {
-        form.transform((data) => ({
-            ...data,
-            _method: "PUT", // 👈 spoof the method
-        })).post(`/category/update/${props.category.id}`, {
-            forceFormData: true,
-            onSuccess: () => {
-                toast.add({
-                    severity: "success",
-                    summary: "Success",
-                    detail: "Category Update Successfully!",
-                    life: 20000,
-                });
-            },
-            onError: () => {
-                toast.add({
-                    severity: "error",
-                    summary: "Error",
-                    detail: "Failed to Update category. Please check the form.",
-                    life: 20000,
-                });
-            },
-        });
-    } else {
-        form.post("/category/create", {
-            forceFormData: true,
-            onSuccess: () => {
-                toast.add({
-                    severity: "success",
-                    summary: "Success",
-                    detail: "Category Added Successfully!",
-                    life: 20000,
-                });
-            },
-            onError: () => {
-                toast.add({
-                    severity: "error",
-                    summary: "Error",
-                    detail: "Failed to create category. Please check the form.",
-                    life: 20000,
-                });
-            },
-        });
-    }
-};
+const { previewSrc, onFileSelect } = useImagePreview();
+const { form, submit } = useCategoryForm(props, previewSrc);
 </script>

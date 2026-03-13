@@ -48,6 +48,7 @@ class ProductController extends Controller
     {
         return Inertia::render('Admin/Products/Products', [
             'product' => Inertia::defer(fn() => $this->productService->getProduct()),
+            'category' => $this->categoryService->getCategoryProduct(), 
         ]);
     }
 
